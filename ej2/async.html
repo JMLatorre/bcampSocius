@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ejercicio Pelicula</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+    <h2 class="mb-4">Película</h2>
+
+    <!-- Botón para consultar película -->
+    <div class="mb-3">
+        <button type="button" class="btn btn-primary" onclick="getDetallesPelicula()">Consultar Película</button>
+    </div>
+
+    <!-- Combobox con películas -->
+    <div class="mb-3">
+        <label for="peliculas" class="form-label">Seleccione una película:</label>
+        <select id="peliculas" class="form-control">
+            <option value="">Seleccione una película</option>
+        </select>
+    </div>
+
+    <!-- Datos de la película -->
+    <h3>Detalles de la película</h3>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="form-group">
+                <label for="nombre">Nombre:</label>
+                <input type="text" id="nombre" class="form-control" readonly>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                <label for="año">Año:</label>
+                <input type="text" id="año" class="form-control" readonly>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                <label for="genero">Género:</label>
+                <input type="text" id="genero" class="form-control" readonly>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    $(document).ready(function() {
+        getPelis();
+    });
+
+    function getPelis() {
+        $.ajax({
+            url: 'https://www.codigo-alfa.cl/aglo/Tester/listasPeliculas',
+            method: 'GET',
+            success: function(data) {
+                const peliculasList = data.peliculas;
+                let cadenaOption = '<option>Seleccione una película</option>';
+                peliculasList.forEach((peli) => {
+                    cadenaOption += `<option value="${peli.id}" title="${peli.title}" year="${peli.year}" genre="${peli.genre}">${peli.title}</option>`;
+                });
+                $("#peliculas").html(cadenaOption);
+            }
+        });
+    }
+
+    function getDetallesPelicula() {
+        const title = $("#peliculas option:selected").attr('title');
+        const year = $("#peliculas option:selected").attr('year');
+        const genre = $("#peliculas option:selected").attr('genre');
+
+        $("#nombre").val(title);
+        $("#año").val(year);
+        $("#genero").val(genre);
+    }
+</script>
+</body>
+</html>
